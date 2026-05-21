@@ -1,0 +1,167 @@
+:root {
+    --bg-color: #1a1a2e; /* サイバー工場の暗い背景 */
+    --bg-panel: #16213e;
+    --text-color: #e94560; /* ネオンピンク/レッド */
+    --text-dim: #0f3460;
+    --accent-main: #f9d342; /* バナナ色（サイバーイエロー） */
+    --accent-light: #fbe58f;
+    --success-color: #4ade80; /* スキャン完了グリーン */
+    --danger-color: #ff2a2a; /* エラーレッド */
+    --magic-color: #00f0ff; /* スキャンブルー */
+    --font-pixel: 'DotGothic16', sans-serif;
+    --font-cyber: 'Share Tech Mono', monospace; /* デジタルなフォント */
+    --border-dungeon: 2px solid var(--accent-main);
+    --shadow-dungeon: 0 0 10px rgba(249, 211, 66, 0.3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: var(--font-pixel); background-color: var(--bg-color); color: var(--text-color);
+    user-select: none; -webkit-user-select: none; overflow-x: hidden;
+    /* スキャンライン背景 */
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 240, 255, 0.05) 2px, rgba(0, 240, 255, 0.05) 4px);
+}
+
+#game-container { position: relative; width: 100vw; height: 100vh; max-width: 600px; margin: 0 auto; background: radial-gradient(circle at center, transparent 0%, rgba(26, 26, 46, 0.9) 100%); overflow: hidden; display: flex; flex-direction: column; border-left: 2px solid var(--text-dim); border-right: 2px solid var(--text-dim);}
+
+/* スタンプエフェクト */
+.stamp-effect {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 999; pointer-events: none; opacity: 0;
+    display: flex; justify-content: center; align-items: center;
+    background: rgba(0,0,0,0.5);
+}
+.stamp-icon {
+    font-family: var(--font-pixel); font-size: 5rem; font-weight: bold;
+    color: var(--success-color); border: 8px solid var(--success-color);
+    padding: 10px 40px; border-radius: 10px; text-shadow: 0 0 10px var(--success-color);
+    box-shadow: 0 0 20px var(--success-color), inset 0 0 20px var(--success-color);
+    transform: scale(3) rotate(-10deg); opacity: 0;
+}
+.stamp-icon.reject {
+    color: var(--danger-color); border-color: var(--danger-color);
+    text-shadow: 0 0 10px var(--danger-color); box-shadow: 0 0 20px var(--danger-color), inset 0 0 20px var(--danger-color);
+}
+.stamp-effect.stamp-anim { animation: stampBgFlash 0.6s ease-out; }
+.stamp-effect.stamp-anim .stamp-icon { animation: stampSlam 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+@keyframes stampBgFlash { 0%, 100% { opacity: 0; } 10%, 80% { opacity: 1; } }
+@keyframes stampSlam { 0% { transform: scale(3) rotate(-10deg); opacity: 0; } 50% { transform: scale(0.8) rotate(5deg); opacity: 1; filter: brightness(2); } 100% { transform: scale(1) rotate(-5deg); opacity: 1; } }
+
+/* SCREEN SHAKE */
+.shake-screen { animation: screenShake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes screenShake {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    10%, 90% { transform: translate3d(-5px, 0, 0); }
+    20%, 80% { transform: translate3d(5px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-10px, 5px, 0); }
+    40%, 60% { transform: translate3d(10px, -5px, 0); }
+}
+
+.screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; z-index: 10; padding: 20px; overflow-y: auto; }
+.screen.active { display: flex; }
+
+#screen-title { justify-content: center; align-items: center; text-align: center; }
+.factory-bg { background: linear-gradient(135deg, #16213e, #0f3460); }
+.pixel-border { padding: 4px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 0 20px rgba(249, 211, 66, 0.4); border: 2px dashed var(--accent-main); }
+#title-img { width: 160px; height: 160px; object-fit: cover; display: block; image-rendering: pixelated; }
+
+.dungeon-title { font-family: var(--font-cyber); font-size: 3rem; color: var(--accent-main); margin-bottom: 5px; text-shadow: 0 0 10px var(--accent-main); }
+#screen-title h2 { font-size: 1.5rem; color: #fff; margin-bottom: 15px; }
+.subtitle { color: var(--accent-light); margin-bottom: 30px; font-size: 1.1rem; }
+
+.dungeon-btn {
+    font-family: var(--font-pixel); font-weight: bold; font-size: 1.2rem; padding: 15px 30px;
+    border: 1px solid var(--accent-main); background: rgba(249, 211, 66, 0.1);
+    color: var(--accent-main); cursor: pointer; transition: all 0.2s;
+    box-shadow: inset 0 0 10px rgba(249, 211, 66, 0.2); border-radius: 0;
+}
+.dungeon-btn:active { transform: scale(0.95); background: var(--accent-main); color: #000; box-shadow: 0 0 20px var(--accent-main); }
+.dungeon-btn:hover { background: rgba(249, 211, 66, 0.3); }
+
+.game-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(15, 52, 96, 0.8); border-bottom: 2px solid var(--magic-color); margin-bottom: 15px; flex-shrink: 0; }
+.hp-bar { font-size: 1.6rem; letter-spacing: 2px; color: #fff; text-shadow: 0 0 5px #fff; transition: all 0.3s; }
+.header-right { display: flex; align-items: center; gap: 15px; }
+.stage-info { font-family: var(--font-cyber); font-size: 1.1rem; color: var(--accent-main); }
+.timer-box { font-family: var(--font-cyber); font-size: 1.6rem; color: var(--magic-color); width: 45px; text-align: center; text-shadow: 0 0 5px var(--magic-color);}
+.timer-danger { color: var(--danger-color); animation: blink 0.5s infinite; text-shadow: 0 0 5px var(--danger-color);}
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+.instruction-box { background: rgba(233, 69, 96, 0.1); border-left: 4px solid var(--text-color); padding: 10px; font-size: 1rem; margin-bottom: 15px; line-height: 1.4; color: #fff; flex-shrink: 0; }
+
+.stage-panel { display: none; flex-direction: column; flex: 1; overflow-y: auto; min-height: 0; }
+.stage-panel.active { display: flex; }
+
+.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-shrink: 0; }
+.counter-text { font-family: var(--font-cyber); font-size: 1rem; color: var(--accent-light); }
+
+/* HINT BUTTON */
+.hint-btn { font-size: 0.9rem; padding: 8px 15px; border-color: var(--magic-color); color: var(--magic-color); background: transparent; }
+.hint-btn:hover { background: rgba(0, 240, 255, 0.2); }
+.hint-btn:disabled, .hint-btn.used { border-color: #555; color: #555; background: rgba(0,0,0,0.5); cursor: not-allowed; box-shadow: none; }
+
+.gate-card { background: rgba(22, 33, 62, 0.9); color: #fff; padding: 15px; margin-bottom: 15px; border: 1px solid var(--text-dim); box-shadow: inset 0 0 20px rgba(0,0,0,0.8); flex-shrink: 0; font-size: 1.2rem; line-height: 1.5; }
+
+/* 視覚ヒント（スキャナーUI） */
+.visual-hint-box { height: 80px; margin-bottom: 15px; background: #000; border: 1px solid #333; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center;}
+.scanner-laser { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--magic-color); box-shadow: 0 0 10px var(--magic-color), 0 0 20px var(--magic-color); animation: scanMove 2s infinite linear;}
+.scanner-text { font-family: var(--font-cyber); font-size: 0.9rem; color: var(--magic-color); z-index: 2; text-shadow: 0 0 5px var(--magic-color); animation: textPulse 1s infinite;}
+.barcode { font-family: var(--font-cyber); font-size: 1.5rem; color: #555; letter-spacing: 2px; position: absolute; bottom: 5px;}
+
+/* 異常データ（スキャン完了後など）の状態変化 */
+.scan-complete .scanner-laser { background: var(--success-color); box-shadow: 0 0 10px var(--success-color), 0 0 20px var(--success-color); animation: none; top: 50%; height: 4px; opacity: 0.5;}
+.scan-complete .scanner-text { color: var(--success-color); text-shadow: 0 0 5px var(--success-color); animation: none;}
+.scan-error .scanner-laser { background: var(--danger-color); box-shadow: 0 0 10px var(--danger-color), 0 0 20px var(--danger-color); animation: none; top: 50%; height: 4px; opacity: 0.5;}
+.scan-error .scanner-text { color: var(--danger-color); text-shadow: 0 0 5px var(--danger-color); animation: none;}
+
+@keyframes scanMove { 0% { top: -10px; } 50% { top: 100%; } 100% { top: -10px; } }
+@keyframes textPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.quiz-options { display: flex; flex-direction: column; gap: 8px; padding: 5px 0; flex-shrink: 0; }
+.quiz-opt { font-family: var(--font-pixel); font-size: 1.1rem; padding: 12px; border: 1px solid #333; background: rgba(0,0,0,0.5); color: #ccc; cursor: pointer; text-align: left; transition: all 0.2s; position: relative; overflow: hidden;}
+/* ホバー時のスキャンエフェクト */
+.quiz-opt::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2), transparent); transition: left 0.3s; }
+.quiz-opt:hover::before { left: 100%; }
+.quiz-opt:hover { border-color: var(--magic-color); color: #fff; box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.2);}
+.quiz-opt:active { transform: scale(0.98); }
+
+.quiz-opt.correct { border-color: var(--success-color); color: var(--success-color); background: rgba(74, 222, 128, 0.1); font-weight: bold; box-shadow: inset 0 0 15px rgba(74, 222, 128, 0.3);}
+.quiz-opt.wrong { border-color: var(--danger-color); color: var(--danger-color); background: rgba(255, 42, 42, 0.1); box-shadow: inset 0 0 15px rgba(255, 42, 42, 0.3);}
+.quiz-opt.hidden-opt { opacity: 0.2; pointer-events: none; background: #000; border-color: #111; text-decoration: line-through;}
+
+.feedback-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 85%; background: rgba(22, 33, 62, 0.95); border: 2px solid var(--accent-main); padding: 20px; text-align: center; z-index: 200; box-shadow: 0 0 30px rgba(0, 0, 0, 0.8); }
+.feedback-overlay.hidden { display: none; }
+.feedback-title { font-family: var(--font-cyber); font-size: 2.2rem; font-weight: bold; margin-bottom: 15px; }
+.feedback-text { font-size: 1rem; line-height: 1.6; margin-bottom: 20px; text-align: left; background: rgba(0,0,0,0.5); padding: 15px; border: 1px solid #333; color: #fff;}
+
+/* GAMEOVER SCREEN */
+#screen-gameover { justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle, #500, #000); }
+.gameover-title { font-family: var(--font-cyber); font-size: 3.5rem; color: var(--danger-color); margin-bottom: 10px; text-shadow: 0 0 20px var(--danger-color); }
+.gameover-subtitle { color: #ccc; font-size: 1.2rem; margin-bottom: 40px;}
+
+/* CLEAR SCREEN */
+#screen-clear { justify-content: center; align-items: center; text-align: center; }
+#clear-img { width: 120px; height: 120px; object-fit: cover; border: 2px solid var(--success-color); margin-bottom: 15px; image-rendering: pixelated; box-shadow: 0 0 20px var(--success-color);}
+.clear-title { font-family: var(--font-cyber); font-size: 3rem; color: var(--success-color); margin-bottom: 5px; text-shadow: 0 0 15px var(--success-color);}
+.rank-display { font-size: 1.8rem; color: var(--accent-main); margin-bottom: 15px; }
+.clear-subtitle { color: #fff; margin-bottom: 20px; }
+.score-display { font-family: var(--font-cyber); font-size: 1.5rem; color: var(--magic-color); margin-bottom: 20px;}
+.password-box { background: rgba(0,0,0,0.5); border: 1px solid var(--accent-main); padding: 15px; width: 100%; margin-bottom: 20px; box-shadow: inset 0 0 10px rgba(249, 211, 66, 0.2);}
+.password-box p:first-child { font-size: 0.9rem; margin-bottom: 8px; color: var(--accent-light); }
+.password-text { font-family: var(--font-cyber); font-size: 1.2rem; color: var(--success-color); font-weight: bold; }
+
+.review-section { width: 100%; margin-top: 10px; }
+.review-title { font-family: var(--font-cyber); font-size: 1.2rem; color: var(--accent-main); border-bottom: 1px solid var(--text-dim); padding-bottom: 5px; margin-bottom: 10px; text-align: left; }
+.review-perfect { text-align: center; font-size: 1.1rem; color: #000; padding: 15px; background: var(--success-color); font-weight: bold;}
+.review-card { background: rgba(0,0,0,0.5); border: 1px solid var(--text-dim); padding: 12px; margin-bottom: 10px; text-align: left; border-left: 4px solid var(--danger-color); }
+.review-stage { font-family: var(--font-cyber); font-size: 0.8rem; color: var(--magic-color); margin-bottom: 4px; }
+.review-q { font-size: 0.95rem; color: #fff; margin-bottom: 6px; line-height: 1.4; }
+.review-a { font-size: 0.9rem; color: var(--danger-color); margin-bottom: 6px; font-weight: bold;}
+.review-exp { font-size: 0.85rem; color: #ccc; line-height: 1.4; }
+
+@media (max-height: 700px) {
+    .screen { padding: 15px; }
+    .dungeon-title { font-size: 2.2rem; }
+    .gate-card { padding: 10px; font-size: 1rem; }
+    .quiz-opt { padding: 10px; font-size: 1rem; }
+}

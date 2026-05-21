@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>情報仕分け人「ボクバナナの異常な日常」</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- スタンプエフェクト -->
+        <div id="stamp-effect" class="stamp-effect hidden">
+            <div class="stamp-icon" id="stamp-icon">承認</div>
+        </div>
+
+        <!-- TITLE SCREEN -->
+        <div id="screen-title" class="screen active">
+            <div class="pixel-border factory-bg">
+                <img id="title-img" src="./banana_worker.png" alt="ボクバナナ仕分け人">
+            </div>
+            <h1 class="dungeon-title">DATA SORTER</h1>
+            <h2>ボクバナナの異常な日常</h2>
+            <p class="subtitle">フェイクニュースを仕分けろ！</p>
+            <button class="dungeon-btn start-btn" onclick="startGame()">📦 業務を開始する</button>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div id="screen-game" class="screen">
+            <div class="game-header">
+                <div class="hp-bar" id="hp-bar">🍌🍌🍌</div>
+                <div class="header-right">
+                    <span class="stage-info" id="stage-title"></span>
+                    <span class="timer-box" id="timer">--</span>
+                </div>
+            </div>
+            <div id="instruction-box" class="instruction-box"></div>
+            
+            <div id="panel-main" class="stage-panel active">
+                <div class="panel-header">
+                    <div id="counter" class="counter-text"></div>
+                    <!-- お助け機能 -->
+                    <button id="hint-btn" class="dungeon-btn hint-btn" onclick="useHint()">🔍 ファクトチェック (Time -5s)</button>
+                </div>
+
+                <div class="gate-card" id="gate-card">
+                    <!-- 視覚ヒント：スキャンレーザーUI -->
+                    <div id="visual-hint-box" class="visual-hint-box scanner-bg">
+                        <div class="scanner-laser" id="scanner-laser"></div>
+                        <div class="scanner-text" id="scanner-text">ANALYZING DATA...</div>
+                        <div class="barcode">|||||| ||| |||| | ||||| | |||</div>
+                    </div>
+                    <div id="question-text"></div>
+                </div>
+                <div id="options" class="quiz-options"></div>
+            </div>
+
+            <div id="feedback-overlay" class="feedback-overlay hidden">
+                <div id="feedback-title" class="feedback-title"></div>
+                <p id="feedback-text" class="feedback-text"></p>
+                <button class="dungeon-btn" id="next-btn" onclick="closeFeedback()">次のデータへ ▶</button>
+            </div>
+        </div>
+
+        <!-- GAMEOVER SCREEN -->
+        <div id="screen-gameover" class="screen">
+            <h1 class="gameover-title">SYSTEM HALTED</h1>
+            <p class="gameover-subtitle" id="gameover-reason">嘘の情報にまみれ、工場が機能停止した…</p>
+            <img src="./banana_worker.png" alt="Game Over" style="width:100px; filter: grayscale(100%); margin-bottom: 20px;">
+            <button class="dungeon-btn" onclick="startGame()">↻ 再稼働</button>
+        </div>
+
+        <!-- CLEAR SCREEN -->
+        <div id="screen-clear" class="screen">
+            <img id="clear-img" src="./banana_victory.png" alt="仕分け完了">
+            <h1 class="clear-title">ALL SORTED!</h1>
+            <!-- 称号 -->
+            <h2 id="rank-display" class="rank-display"></h2>
+            <p class="clear-subtitle">情報の真偽を完璧に見極めた！</p>
+            <div id="score-display" class="score-display"></div>
+            
+            <div class="password-box">
+                <p>🗝️ Google Classroomに「あいことば」を入力して報告しよう</p>
+                <p class="password-text" id="password-text"></p>
+            </div>
+
+            <div class="review-section">
+                <h3 class="review-title">📜 不良品ログ（間違えた問題）</h3>
+                <div id="review-area"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
