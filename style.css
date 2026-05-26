@@ -148,7 +148,7 @@ body {
 .score-display { font-family: var(--font-cyber); font-size: 1.5rem; color: var(--magic-color); margin-bottom: 20px;}
 .password-box { background: rgba(0,0,0,0.5); border: 1px solid var(--accent-main); padding: 15px; width: 100%; margin-bottom: 20px; box-shadow: inset 0 0 10px rgba(249, 211, 66, 0.2);}
 .password-box p:first-child { font-size: 0.9rem; margin-bottom: 8px; color: var(--accent-light); }
-.password-text { font-family: var(--font-cyber); font-size: 1.2rem; color: var(--success-color); font-weight: bold; }
+.password-text { font-family: var(--font-cyber); font-size: 1.2rem; color: var(--success-color); font-weight: bold; user-select: text; -webkit-user-select: text; }
 
 .review-section { width: 100%; margin-top: 10px; }
 .review-title { font-family: var(--font-cyber); font-size: 1.2rem; color: var(--accent-main); border-bottom: 1px solid var(--text-dim); padding-bottom: 5px; margin-bottom: 10px; text-align: left; }
